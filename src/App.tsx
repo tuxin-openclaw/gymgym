@@ -1,8 +1,11 @@
 import { useEffect } from 'react'
-import { Route, Routes, useLocation } from 'react-router'
+import { Route, Routes, useLocation, useNavigate } from 'react-router'
 import { BottomNav } from './components/BottomNav'
 import { ConfirmHost, ToastHost } from './components/ui'
-import { StartSheetHost } from './components/StartSheet'
+import { StartSheetHost, openStartSheet } from './components/StartSheet'
+import { InstallSheetHost } from './components/InstallSheet'
+import { openInstallSheet } from './lib/install'
+import { useWorkout } from './lib/workout-store'
 import { applyTheme, useSettings } from './lib/settings'
 import Home from './pages/Home'
 import Plans from './pages/Plans'
@@ -21,6 +24,18 @@ const TAB_ROUTES = ['/', '/plans', '/exercises', '/records']
 export default function App() {
   const theme = useSettings((s) => s.theme)
   const { pathname } = useLocation()
+  const nav = useNavigate()
+  // 桌面图标长按快捷方式：?action=start | install
+  useEffect(() => {
+    const params = new URLSearchParams(location.search)
+    const action = params.get('action')
+    if (!action) return
+    history.replaceState(null, '', location.pathname + location.hash)
+    if (action === 'start') {
+      if (useWorkout.getState().workout) nav('/workout')
+      else openStartSheet()
+    } else if (action === 'install') openInstallSheet()
+  }, [nav])
   useEffect(() => {
     applyTheme(theme)
     if (theme !== 'system') return
@@ -53,6 +68,7 @@ export default function App() {
       </main>
       {showNav && <BottomNav />}
       <StartSheetHost />
+      <InstallSheetHost />
       <ConfirmHost />
       <ToastHost />
     </div>

@@ -1,5 +1,6 @@
 import { useRef } from 'react'
-import { Download, Upload, Trash2, Moon, Sun, Monitor, ExternalLink, Database } from 'lucide-react'
+import { Download, Upload, Trash2, Moon, Sun, Monitor, ExternalLink, Database, MonitorSmartphone, ChevronRight } from 'lucide-react'
+import { openInstallSheet, useInstall } from '../lib/install'
 import { useSettings } from '../lib/settings'
 import { clearAll, exportAll, importAll } from '../lib/db'
 import { dayKey } from '../lib/utils'
@@ -9,6 +10,7 @@ import { Logo } from '../components/icons'
 export default function SettingsPage() {
   const s = useSettings()
   const file = useRef<HTMLInputElement>(null)
+  const installedNow = useInstall((x) => x.standalone || x.installed)
 
   const doExport = async () => {
     const data = await exportAll()
@@ -47,6 +49,15 @@ export default function SettingsPage() {
             />
           </div>
         </div>
+
+        <Group title="应用">
+          <button onClick={openInstallSheet} className="flex h-14 w-full items-center gap-3 px-4 text-left text-[15px] hover:bg-surface-2">
+            <MonitorSmartphone className="size-5" />
+            <span className="flex-1">安装到桌面 / 主屏幕</span>
+            <span className={installedNow ? 'text-xs font-semibold text-accent-text' : 'text-xs text-ink-3'}>{installedNow ? '已安装' : '未安装'}</span>
+            <ChevronRight className="size-4 text-ink-3" />
+          </button>
+        </Group>
 
         <Group title="训练">
           <Row label="重量单位" desc="只影响显示，不会换算已有数据">

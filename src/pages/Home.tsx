@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { Settings, Play, ChevronRight, Flame, Clock, Layers, Plus, Moon, Sparkles, Timer } from 'lucide-react'
@@ -12,6 +12,8 @@ import { Card, IconButton, SectionTitle, Button } from '../components/ui'
 import { Logo } from '../components/icons'
 import { BodyMap } from '../components/BodyMap'
 import { openStartSheet, useStartWorkout } from '../components/StartSheet'
+import { InstallBanner } from '../components/InstallSheet'
+import { bannerDismissed, useInstall } from '../lib/install'
 import type { Workout } from '../lib/types'
 
 export default function Home() {
@@ -22,6 +24,8 @@ export default function Home() {
   const recent = useLiveQuery(() => db.workouts.orderBy('startedAt').reverse().limit(60).toArray(), [], [])
   const { byId } = useExercises()
   const startWorkout = useStartWorkout()
+  const standalone = useInstall((s) => s.standalone || s.installed)
+  const [hideBanner, setHideBanner] = useState(bannerDismissed)
 
   const weekStartDate = startOfWeek(new Date(), weekStart)
   const week = Array.from({ length: 7 }, (_, i) => addDays(weekStartDate, i))
@@ -71,6 +75,7 @@ export default function Home() {
       </header>
 
       <div className="px-4">
+        {!standalone && !hideBanner && !active && <InstallBanner onDismiss={() => setHideBanner(true)} />}
         {active && (
           <button
             onClick={() => nav('/workout')}

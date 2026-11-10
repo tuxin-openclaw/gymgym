@@ -32,6 +32,21 @@ npm run data       # 从 data-src/ 重新生成 public/data/exercises.json
 
 仓库自带 GitHub Pages 工作流（`.github/workflows/deploy.yml`）：在仓库 Settings → Pages 把 Source 设为 **GitHub Actions**，推送到 `main` 后自动部署。也可以把 `dist/` 放到任何静态托管（Vercel、Netlify、Cloudflare Pages）。手机浏览器打开后选择「添加到主屏幕」即可。
 
+## 安装到桌面 / 主屏幕
+
+GymGym 是标准 PWA，部署后（必须是 HTTPS）可以像 App 一样安装：
+
+| 设备 | 方式 |
+| --- | --- |
+| iPhone / iPad | 用 **Safari** 打开 → 底部「分享」→「添加到主屏幕」 |
+| 安卓 | Chrome / Edge / 系统浏览器打开，首页会出现「安装」提示条，点一下即可；或菜单 ⋮ →「安装应用」 |
+| 电脑 | Chrome / Edge 地址栏右侧的「安装」图标；Mac Safari：文件 →「添加到程序坞」 |
+| 微信 / QQ 内 | 无法直接安装，点右上角 ··· →「在浏览器中打开」 |
+
+App 内首页提示条和「设置 → 安装到桌面 / 主屏幕」都有分平台的图文引导。安装后：全屏无地址栏、断网可用、iOS 有启动画面，长按桌面图标（安卓 / 电脑）可直接「开始训练」「训练记录」「动作库」。
+
+重新生成图标与 iOS 启动图：`node scripts/gen-pwa-assets.cjs`。
+
 ## 致谢
 
 - 动作数据与示范图：[yuhonas/free-exercise-db](https://github.com/yuhonas/free-exercise-db)（Unlicense）。中文名称由本项目翻译，见 `scripts/zh-names.txt`。
