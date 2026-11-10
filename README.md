@@ -1,6 +1,6 @@
 # GymGym 💪 健身记录
 
-一个给自己用的健身记录 App：**制定计划 → 记录每一组 → 回顾进步**。移动端优先的 PWA，可以「添加到主屏幕」像原生 App 一样使用，数据只保存在本机。
+一个给自己用的健身记录 App：**制定计划 → 记录每一组 → 回顾进步**。移动端优先的 PWA，可以「添加到主屏幕」像原生 App 一样使用，账号由管理员创建（支持 GitHub 登录），数据本地优先、联网自动同步到服务器（SQLite），断网也能照常记录。
 
 <p>
 <img src="docs/screenshots/home.jpg" width="160"> <img src="docs/screenshots/picker.jpg" width="160"> <img src="docs/screenshots/workout.jpg" width="160"> <img src="docs/screenshots/summary.jpg" width="160"> <img src="docs/screenshots/stats.jpg" width="160"> <img src="docs/screenshots/library.jpg" width="160">
@@ -21,16 +21,18 @@
 
 ```bash
 npm install
-npm run dev        # 本地开发 http://localhost:5173
-npm run build      # 产物在 dist/
+ADMIN_USERNAME=admin ADMIN_PASSWORD=admin12345 npm run dev:server  # 后端 http://localhost:3000（Node ≥ 22.18，数据在 ./data/gymgym.db）
+npm run dev        # 前端 http://localhost:5173，/api 代理到后端
+npm run build      # 前端产物在 dist/
+npm start          # 生产模式：后端同时托管 dist/
 npm run data       # 从 data-src/ 重新生成 public/data/exercises.json
 ```
 
-技术栈：React 19 · TypeScript · Vite · Tailwind CSS v4 · Dexie（IndexedDB）· Zustand · vite-plugin-pwa · Lucide 图标 · 自绘 SVG 人体肌肉图与图表。
+技术栈：React 19 · TypeScript · Vite · Tailwind CSS v4 · Dexie（IndexedDB，本地缓存）· Hono + node:sqlite + Better Auth（后端）· Zustand · vite-plugin-pwa · Lucide 图标 · 自绘 SVG 人体肌肉图与图表。
 
 ## 部署
 
-仓库自带 GitHub Pages 工作流（`.github/workflows/deploy.yml`）：在仓库 Settings → Pages 把 Source 设为 **GitHub Actions**，推送到 `main` 后自动部署。也可以把 `dist/` 放到任何静态托管（Vercel、Netlify、Cloudflare Pages）。手机浏览器打开后选择「添加到主屏幕」即可。
+用 Dockerfile 部署为单个容器（接口 + 前端），SQLite 文件放在挂载卷 `/app/data`。Dokploy 的完整步骤见 [docs/deploy-dokploy.md](docs/deploy-dokploy.md)。
 
 ## 安装到桌面 / 主屏幕
 

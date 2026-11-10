@@ -6,6 +6,9 @@ import { VitePWA } from 'vite-plugin-pwa'
 export default defineConfig({
   base: './',
   build: { chunkSizeWarningLimit: 800 },
+  // 监听 0.0.0.0，手机可通过本机局域网 IP 访问（终端会打印 Network 地址）
+  server: { host: true, port: 5173, proxy: { '/api': 'http://localhost:3000' } },
+  preview: { host: true, port: 4173, proxy: { '/api': 'http://localhost:3000' } },
   plugins: [
     react(),
     tailwindcss(),
@@ -53,6 +56,7 @@ export default defineConfig({
         // 启动图和截图只在安装时使用，不必预缓存
         globIgnores: ['splash/**', 'screenshots/**'],
         navigateFallback: 'index.html',
+        navigateFallbackDenylist: [/^\/api\//],
         maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
         runtimeCaching: [
           {

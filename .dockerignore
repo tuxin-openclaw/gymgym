@@ -1,0 +1,8 @@
+node_modules
+dist
+dev-dist
+data
+.git
+.DS_Store
+*.local
+pnpm-lock.yaml

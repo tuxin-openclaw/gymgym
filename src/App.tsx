@@ -18,11 +18,16 @@ import Summary from './pages/Summary'
 import Records from './pages/Records'
 import WorkoutDetail from './pages/WorkoutDetail'
 import SettingsPage from './pages/Settings'
+import LoginPage from './pages/Login'
+import AdminPage from './pages/Admin'
+import { loadServerConfig, useAuth } from './lib/auth'
+import { startAutoSync } from './lib/sync'
 
 const TAB_ROUTES = ['/', '/plans', '/exercises', '/records']
 
 export default function App() {
   const theme = useSettings((s) => s.theme)
+  const user = useAuth((s) => s.user)
   const { pathname } = useLocation()
   const nav = useNavigate()
   // 桌面图标长按快捷方式：?action=start | install
@@ -47,7 +52,16 @@ export default function App() {
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [pathname])
+  useEffect(() => (user ? startAutoSync() : undefined), [user?.id])
+  useEffect(() => void loadServerConfig(), [])
   const showNav = TAB_ROUTES.includes(pathname)
+  if (!user)
+    return (
+      <div className="min-h-dvh bg-bg">
+        <LoginPage />
+        <ToastHost />
+      </div>
+    )
   return (
     <div className="mx-auto min-h-dvh max-w-lg bg-bg">
       <main className={showNav ? 'pb-28' : ''}>
@@ -63,6 +77,7 @@ export default function App() {
           <Route path="/records" element={<Records />} />
           <Route path="/records/:id" element={<WorkoutDetail />} />
           <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/admin" element={<AdminPage />} />
           <Route path="*" element={<Home />} />
         </Routes>
       </main>

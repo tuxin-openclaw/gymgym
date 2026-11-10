@@ -8,7 +8,7 @@ import { useSettings } from '../lib/settings'
 import { BODY_PARTS, type BodyPart } from '../lib/catalog'
 import { bestByExercise, isWorkingSet, muscleLoad, workoutStats } from '../lib/stats'
 import type { Workout } from '../lib/types'
-import { WEEK_LABELS, addDays, cx, dayKey, fmtDate, fmtNumber, startOfWeek, uid, fmtDuration } from '../lib/utils'
+import { WEEK_LABELS, addDays, cx, dayKey, fmtDate, fmtNumber, startOfWeek, fmtDuration } from '../lib/utils'
 import { Button, Card, EmptyState, PageHeader, Segmented, SectionTitle, Sheet, toast, confirm } from '../components/ui'
 import { BarChart, LineChart } from '../components/charts'
 import { BodyMap } from '../components/BodyMap'
@@ -379,7 +379,7 @@ function BodyWeightCard() {
     const weight = parseFloat(val)
     if (!weight) return
     const existing = list.find((b) => b.date === date)
-    await db.bodyweights.put({ id: existing?.id ?? uid(), date, weight })
+    await db.bodyweights.put({ id: existing?.id ?? `bw-${date}`, date, weight })
     setOpen(false)
     setVal('')
     toast('体重已记录')
