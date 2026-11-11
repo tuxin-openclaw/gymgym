@@ -23,7 +23,8 @@ import { useSettings } from '../lib/settings'
 import { useWorkout } from '../lib/workout-store'
 import { lastSetsFor } from '../lib/stats'
 import type { Exercise, SetType, WorkoutExercise, WorkoutSet } from '../lib/types'
-import { beep, cx, fmtClock, vibrate } from '../lib/utils'
+import { cx, fmtClock } from '../lib/utils'
+import { haptic, restFinishedAlert } from '../lib/feedback'
 import { Button, EmptyState, IconButton, Sheet, confirm, toast } from '../components/ui'
 import { ExercisePicker } from '../components/ExercisePicker'
 import { ExerciseThumb } from '../components/ExerciseMedia'
@@ -413,7 +414,7 @@ function ExerciseBlock({
                       return
                     }
                     if (Object.keys(patch).length) store.updateSet(we.uid, s.id, patch)
-                    vibrate(15)
+                    haptic(15)
                   }
                   store.toggleDone(we.uid, s.id)
                 }}
@@ -608,8 +609,7 @@ function RestBar() {
   useEffect(() => {
     if (!rest || left > 0 || firedFor.current === rest.endsAt) return
     firedFor.current = rest.endsAt
-    if (vib) vibrate([200, 100, 200])
-    if (sound) beep()
+    restFinishedAlert({ vibrate: vib, sound })
     toast('休息结束，开始下一组！')
     stopRest()
   }, [rest, left, vib, sound, stopRest])

@@ -377,11 +377,11 @@ export function Toggle({ checked, onChange, label }: { checked: boolean; onChang
       aria-checked={checked}
       aria-label={label}
       onClick={() => onChange(!checked)}
-      className={cx('relative h-7 w-12 shrink-0 rounded-full transition-colors', checked ? 'bg-accent' : 'bg-surface-3')}
+      className={cx('relative h-7 w-12 shrink-0 rounded-full p-0 transition-colors', checked ? 'bg-accent' : 'bg-surface-3')}
     >
       <span
         className={cx(
-          'absolute top-1 size-5 rounded-full bg-white shadow transition-transform',
+          'absolute left-0 top-1 size-5 rounded-full bg-white shadow transition-transform',
           checked ? 'translate-x-6' : 'translate-x-1',
         )}
       />

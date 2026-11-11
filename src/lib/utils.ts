@@ -76,34 +76,3 @@ export function greeting() {
   if (h < 18) return '下午好'
   return '晚上好'
 }
-
-export function vibrate(pattern: number | number[]) {
-  try {
-    navigator.vibrate?.(pattern)
-  } catch {
-    /* ignore */
-  }
-}
-
-let audioCtx: AudioContext | null = null
-export function beep(times = 3) {
-  try {
-    audioCtx ??= new AudioContext()
-    const ctx = audioCtx
-    for (let i = 0; i < times; i++) {
-      const o = ctx.createOscillator()
-      const g = ctx.createGain()
-      o.type = 'sine'
-      o.frequency.value = i === times - 1 ? 1320 : 880
-      const t = ctx.currentTime + i * 0.22
-      g.gain.setValueAtTime(0.0001, t)
-      g.gain.exponentialRampToValueAtTime(0.25, t + 0.02)
-      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.18)
-      o.connect(g).connect(ctx.destination)
-      o.start(t)
-      o.stop(t + 0.2)
-    }
-  } catch {
-    /* ignore */
-  }
-}

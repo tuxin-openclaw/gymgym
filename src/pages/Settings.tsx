@@ -7,6 +7,7 @@ import { openInstallSheet, useInstall } from '../lib/install'
 import { useSettings } from '../lib/settings'
 import { clearAll, exportAll, importAll } from '../lib/db'
 import { dayKey } from '../lib/utils'
+import { beep, canVibrate, haptic } from '../lib/feedback'
 import { PageHeader, Segmented, Stepper, Toggle, confirm, toast } from '../components/ui'
 import { Logo } from '../components/icons'
 
@@ -86,6 +87,21 @@ export default function SettingsPage() {
           </Row>
           <Row label="休息结束提示音">
             <Toggle checked={s.sound} onChange={(sound) => s.set({ sound })} label="休息结束提示音" />
+          </Row>
+          <Row
+            label="试一下提醒效果"
+            desc={canVibrate() ? '听不到声音时，请检查手机音量与静音模式' : 'iPhone 网页只支持轻触感（需 iOS 18+）；听不到声音时请检查音量与静音键'}
+          >
+            <button
+              onClick={() => {
+                if (s.vibrate) haptic([300, 120, 300])
+                if (s.sound) beep()
+                if (!s.vibrate && !s.sound) toast('振动和提示音都已关闭')
+              }}
+              className="pressable h-9 shrink-0 rounded-xl bg-surface-2 px-3.5 text-sm font-semibold"
+            >
+              试一下
+            </button>
           </Row>
           <Row label="每周第一天">
             <Segmented
